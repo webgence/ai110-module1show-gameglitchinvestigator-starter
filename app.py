@@ -1,15 +1,21 @@
 import random
 import streamlit as st
 
+
+#FIX ME: Logic breaks here
+
+##FIX: Corrected the range for easy, normal, and hard using agent mode
+
 def get_range_for_difficulty(difficulty: str):
     if difficulty == "Easy":
         return 1, 20
     if difficulty == "Normal":
         return 1, 100
     if difficulty == "Hard":
-        return 1, 50
+        return 1, 1000
     return 1, 100
 
+##FIX: Handled None, empty, floats, and non-numbers using agent mode
 
 def parse_guess(raw: str):
     if raw is None:
@@ -29,23 +35,26 @@ def parse_guess(raw: str):
     return True, value, None
 
 
+
+##FIX: Implemented correct numeric comparisons with matching emojis and returns agent mode
+##FIX: Handled string comparisons by converting guess and secret to int(personally debugged this)
+
 def check_guess(guess, secret):
-    if guess == secret:
+    """
+    Compare guess to secret and return (outcome, message).
+
+    outcome examples: "Win", "Too High", "Too Low"
+    """
+
+    if int(guess) == int(secret):
         return "Win", "🎉 Correct!"
+    if int(guess) > int(secret):
+        return "Too High", "📉 Go LOWER!"
+    return "Too Low", "📈 Go HIGHER!"
 
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
 
+
+##FIX: Implemented score update logic using agent mode
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
     if outcome == "Win":
@@ -107,7 +116,7 @@ if "history" not in st.session_state:
 st.subheader("Make a guess")
 
 st.info(
-    f"Guess a number between 1 and 100. "
+    f"Guess a number between {low} and {high}. "
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
@@ -133,7 +142,7 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
-    st.session_state.secret = random.randint(1, 100)
+    st.session_state.secret = random.randint(low, high)
     st.success("New game started.")
     st.rerun()
 
@@ -148,6 +157,16 @@ if submit:
     st.session_state.attempts += 1
 
     ok, guess_int, err = parse_guess(raw_guess)
+
+
+
+    #Added this part to handle guesses out of range.
+    if int(raw_guess) < low or int(raw_guess) > high:
+        st.session_state.history.append(raw_guess)
+        st.error(f"Guess must be between {low} and {high}.")
+
+
+
 
     if not ok:
         st.session_state.history.append(raw_guess)
