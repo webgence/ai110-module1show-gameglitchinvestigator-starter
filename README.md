@@ -25,19 +25,26 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- The purpose of the game is for the user to guess the correct value that a computer generated.
+
+- There were various logical errors such as the program not handling values that were below or above the range of possible values. The program also didn't handle non int values such as None, empty, floats, and non-numbers. There was also a mismatch in the hint message which lead to the user receiving misleading information on there next guess(eg. "go lower" when the number is larger or "go higher" when the number is lower). The score system is also weird and should be scale down with attempts.
+
+
+- Ultizing Claude Code and my brain, I fixed all of these logical errors. Although some parts I had to manually debug myself because Claude Code wasn't able to fix everything.
+
 
 ## 📸 Demo Walkthrough
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. User enters a guess of 40
+2. Game returns "Too Low"
+3. User enters a guess of 70 -> "Too High"
+4. User enters a guess that is above the maximum range or enters a guess that is below the minimum range -> "Guess must be between 1 and 100."
+5. Score updates correctly after each guess
+6. Game ends after correct guess 
+
+
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
